@@ -2,14 +2,13 @@
 
 A powerful and automated Chrome Extension designed to help you declutter your TikTok account by bulk-removing likes, favorites, reposts, and unfollowing users with a single click.
 
-![TikTok Cleaner UI](./assets/screenshots/tiktok_cleaner_ui.png)
-*Automated TikTok cleaning in action*
-
-![TikTok Cleaner Menu](./assets/screenshots/tiktok_cleaner_menu.png)
-*Simple and intuitive feature menu*
-
-![TikTok Cleaner Processing](./assets/screenshots/tiktok_cleaner_processing.png)
-*Real-time processing count and safety controls*
+<p align="center">
+  <img src="./assets/screenshots/tiktok_cleaner_menu.png" width="300" alt="TikTok Cleaner Menu" />
+  <img src="./assets/screenshots/tiktok_cleaner_processing.png" width="300" alt="TikTok Cleaner Processing" />
+</p>
+<p align="center">
+  <i>Simple interface and real-time processing with safety controls</i>
+</p>
 
 ## 🚀 Features
 
