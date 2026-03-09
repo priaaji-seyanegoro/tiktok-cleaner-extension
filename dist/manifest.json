@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "TikTok Cleaner (Pro Tool)",
+  "version": "1.0.0",
+  "description": "Premium Auto-Unlike, Auto-Unfavorite, and Auto-Unfollow extension for TikTok.",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.tiktok.com/*"
+  ],
+  "content_scripts": [
+    {
+      "js": [
+        "assets/content.ts-BGZ1otiz.js"
+      ],
+      "matches": [
+        "*://*.tiktok.com/*"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "*://*.tiktok.com/*"
+      ],
+      "resources": [
+        "assets/content.ts-BGZ1otiz.js"
+      ],
+      "use_dynamic_url": false
+    }
+  ]
+}
