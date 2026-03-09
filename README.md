@@ -28,18 +28,25 @@ The bot uses advanced DOM selectors and automated navigation to strictly interac
 4. **Safety**: Pauses automatically if a Captcha is detected.
 
 ## 📦 Installation
+If you are not a developer, follow the **ZIP Method**. If you are a developer, use the **CLI Method**.
 
-To use this extension in your browser:
+### Option 1: ZIP Method (Fastest)
+1. **Download**: Download the latest release `.zip` file from this repository.
+2. **Extract**: Unzip/extract the file to a folder on your computer.
+3. **Chrome Extensions**: Open Chrome and type `chrome://extensions/` in the address bar.
+4. **Developer Mode**: Toggle **"Developer mode"** in the top-right corner to **ON**.
+5. **Load Extension**: Click the **"Load unpacked"** button in the top-left corner.
+6. **Select Folder**: Select the `dist` folder you just extracted.
+7. **Done!**: The TikTok Cleaner icon will appear in your extensions list.
 
-1. **Clone or Download** this repository to your local machine.
-2. Run the build command:
+### Option 2: CLI Method (For Developers)
+1. **Clone**: Clone this repository.
+2. **Setup**:
    ```bash
    yarn install
    yarn build
    ```
-3. Open Chrome and go to `chrome://extensions/`.
-4. Enable **Developer mode** (toggle in the top right).
-5. Click **Load unpacked** and select the `dist` folder generated inside this project directory.
+3. **Load**: Follow steps 3-6 from the ZIP Method above, but select the `dist` folder inside your project directory.
 
 ## 💻 Tech Stack
 
