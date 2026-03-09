@@ -18,7 +18,7 @@
   "content_scripts": [
     {
       "js": [
-        "assets/content.ts-BGZ1otiz.js"
+        "assets/content.ts-CtR7GNhg.js"
       ],
       "matches": [
         "*://*.tiktok.com/*"
@@ -31,7 +31,7 @@
         "*://*.tiktok.com/*"
       ],
       "resources": [
-        "assets/content.ts-BGZ1otiz.js"
+        "assets/content.ts-CtR7GNhg.js"
       ],
       "use_dynamic_url": false
     }

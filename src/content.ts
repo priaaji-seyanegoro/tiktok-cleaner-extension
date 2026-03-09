@@ -8,6 +8,7 @@ const randomSleep = (min: number, max: number) => sleep(Math.floor(Math.random()
 let isRunning = false;
 let isPaused = false;
 let unlikeCount = 0;
+const REFRESH_THRESHOLD = 400; // Refresh tab every 400 items to prevent OOM crash
 
 // ==========================================
 // DOM SELECTORS (Verified from live TikTok)
@@ -388,7 +389,6 @@ async function processAutoUnlike() {
   }
   
   isRunning = true;
-  unlikeCount = 0;
   broadcastStatus();
   console.log("====== STARTING AUTO-UNLIKE ======");
 
@@ -441,6 +441,17 @@ async function processAutoUnlike() {
 
     if (!isRunning) break;
 
+    // MEMORY MANAGEMENT: Refresh page if we hit the threshold to prevent OOM (Aw Snap! Error)
+    if (unlikeCount > 0 && unlikeCount % REFRESH_THRESHOLD === 0) {
+      console.log(`♻️ Memory Limit (${REFRESH_THRESHOLD}) reached. Refreshing page to prevent crash...`);
+      await chrome.storage.local.set({ 
+        pendingCommand: 'unlike',
+        persistedCount: unlikeCount 
+      });
+      window.location.reload();
+      return;
+    }
+
     // Pindah video
     console.log("→ Moving to the next video...");
     const moved = await goToNextVideo();
@@ -465,7 +476,6 @@ async function processAutoUnfavorite() {
   }
   
   isRunning = true;
-  unlikeCount = 0;
   broadcastStatus();
   console.log("====== STARTING AUTO-UNFAVORITE ======");
 
@@ -510,6 +520,17 @@ async function processAutoUnfavorite() {
 
     if (!isRunning) break;
 
+    // MEMORY MANAGEMENT: Refresh page if we hit the threshold
+    if (unlikeCount > 0 && unlikeCount % REFRESH_THRESHOLD === 0) {
+      console.log(`♻️ Memory Limit (${REFRESH_THRESHOLD}) reached. Refreshing page to prevent crash...`);
+      await chrome.storage.local.set({ 
+        pendingCommand: 'unfavorite',
+        persistedCount: unlikeCount 
+      });
+      window.location.reload();
+      return;
+    }
+
     console.log("→ Moving to the next video...");
     const moved = await goToNextVideo();
     if (moved) {
@@ -532,7 +553,6 @@ async function processAutoUnrepost() {
   }
   
   isRunning = true;
-  unlikeCount = 0;
   broadcastStatus();
   console.log("====== STARTING AUTO-UNREPOST ======");
 
@@ -597,6 +617,17 @@ async function processAutoUnrepost() {
 
     if (!isRunning) break;
 
+    // MEMORY MANAGEMENT: Refresh page if we hit the threshold
+    if (unlikeCount > 0 && unlikeCount % REFRESH_THRESHOLD === 0) {
+      console.log(`♻️ Memory Limit reached. Refreshing...`);
+      await chrome.storage.local.set({ 
+        pendingCommand: 'unrepost',
+        persistedCount: unlikeCount 
+      });
+      window.location.reload();
+      return;
+    }
+
     // Pindah video berikutnya
     console.log("→ Moving to the next video...");
     const moved = await goToNextVideo();
@@ -620,7 +651,6 @@ async function processAutoUnfollow() {
   }
   
   isRunning = true;
-  unlikeCount = 0;
   broadcastStatus();
   console.log("====== STARTING AUTO-UNFOLLOW ======");
 
@@ -776,6 +806,17 @@ async function processAutoUnfollow() {
       alert(`✅ Bot Finished! Successfully unfollowed ${unlikeCount} accounts.`);
       break;
     }
+
+    // MEMORY MANAGEMENT: Refresh page if we hit the threshold
+    if (unlikeCount > 0 && unlikeCount % REFRESH_THRESHOLD === 0) {
+      console.log(`♻️ Memory Limit reached. Refreshing to clear DOM...`);
+      await chrome.storage.local.set({ 
+        pendingCommand: 'unfollow',
+        persistedCount: unlikeCount 
+      });
+      window.location.reload();
+      return;
+    }
   }
 
   // Tutup modal (klik area di luar modal)
@@ -795,15 +836,19 @@ chrome.runtime.onMessage.addListener((message: any, _: any, sendResponse: any) =
   if (message.command === 'status') {
     sendResponse({ isRunning, isPaused, unlikeCount });
   } else if (message.command === 'unlike') {
+    unlikeCount = 0; // Reset count ONLY when started manually
     processAutoUnlike();
     sendResponse({ status: 'started' });
   } else if (message.command === 'unfavorite') {
+    unlikeCount = 0;
     processAutoUnfavorite();
     sendResponse({ status: 'started' });
   } else if (message.command === 'unrepost') {
+    unlikeCount = 0;
     processAutoUnrepost();
     sendResponse({ status: 'started' });
   } else if (message.command === 'unfollow') {
+    unlikeCount = 0;
     processAutoUnfollow();
     sendResponse({ status: 'started' });
   } else if (message.command === 'stop') {
@@ -834,6 +879,14 @@ chrome.runtime.onMessage.addListener((message: any, _: any, sendResponse: any) =
     }
 
     console.log(`📨 Auto-executing pending command: ${cmd}`);
+    
+    // Restore persisted count if available
+    if (result.persistedCount) {
+      unlikeCount = result.persistedCount;
+      console.log(`📊 Restored count: ${unlikeCount}`);
+      await chrome.storage.local.remove('persistedCount');
+    }
+
     await chrome.storage.local.remove('pendingCommand');
     
     if (cmd === 'unlike') processAutoUnlike();
